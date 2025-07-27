@@ -3,7 +3,7 @@ services:
     name: remote-flask-relay
     env: python
     buildCommand: ""
-    startCommand: python relay_server.py
+    startCommand: gunicorn wsgi:app
     envVars:
       - key: FLASK_ENV
         value: production
